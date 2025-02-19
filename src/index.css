@@ -1,0 +1,70 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 225 25% 12%;
+    --foreground: 210 40% 98%;
+    --card: 228 9% 11%;
+    --card-foreground: 210 40% 98%;
+    --popover: 228 9% 11%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 263 85% 50%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 228 6% 16%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 228 6% 16%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 228 6% 16%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 228 6% 16%;
+    --input: 228 6% 16%;
+    --ring: 263 85% 50%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground overflow-x-hidden cursor-none;
+    font-family: "Space Mono", monospace;
+  }
+  .custom-cursor {
+    @apply fixed w-4 h-4 bg-primary rounded-full pointer-events-none mix-blend-difference z-50 transition-transform duration-100 ease-out;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-trail {
+    @apply fixed w-2 h-2 bg-primary/50 rounded-full pointer-events-none mix-blend-difference;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.section-title {
+  @apply text-4xl md:text-6xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-primary to-blue-500;
+}
+
+.card-hover {
+  @apply transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-primary/20;
+}
+
+.nav-link {
+  @apply relative text-lg font-medium text-foreground/80 hover:text-foreground transition-colors;
+}
+
+.nav-link::after {
+  content: "";
+  @apply absolute left-0 bottom-0 w-0 h-0.5 bg-primary transition-all duration-300;
+}
+
+.nav-link:hover::after {
+  @apply w-full;
+}
