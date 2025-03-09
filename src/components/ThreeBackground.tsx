@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import * as THREE from 'three';
+import { useEffect, useRef } from "react";
+import * as THREE from "three";
 
 const ThreeBackground = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -10,9 +10,14 @@ const ThreeBackground = () => {
 
     // Scene setup
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    
+
     renderer.setSize(window.innerWidth, window.innerHeight);
     containerRef.current.appendChild(renderer.domElement);
 
@@ -25,18 +30,24 @@ const ThreeBackground = () => {
       posArray[i] = (Math.random() - 0.5) * 5;
     }
 
-    particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    particlesGeometry.setAttribute(
+      "position",
+      new THREE.BufferAttribute(posArray, 3)
+    );
 
     // Materials
     const particlesMaterial = new THREE.PointsMaterial({
       size: 0.005,
-      color: '#8b5cf6',
+      color: "#8b5cf6",
       transparent: true,
       opacity: 0.8,
     });
 
     // Mesh
-    const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+    const particlesMesh = new THREE.Points(
+      particlesGeometry,
+      particlesMaterial
+    );
     scene.add(particlesMesh);
 
     // Camera position
@@ -50,7 +61,7 @@ const ThreeBackground = () => {
       };
     };
 
-    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener("mousemove", onMouseMove);
 
     // Animation
     const animate = () => {
@@ -60,8 +71,10 @@ const ThreeBackground = () => {
       particlesMesh.rotation.x += 0.001;
 
       // Follow mouse
-      particlesMesh.rotation.x += (mousePosition.current.y * 0.5 - particlesMesh.rotation.x) * 0.1;
-      particlesMesh.rotation.y += (mousePosition.current.x * 0.5 - particlesMesh.rotation.y) * 0.1;
+      particlesMesh.rotation.x +=
+        (mousePosition.current.y * 0.5 - particlesMesh.rotation.x) * 0.1;
+      particlesMesh.rotation.y +=
+        (mousePosition.current.x * 0.5 - particlesMesh.rotation.y) * 0.1;
 
       renderer.render(scene, camera);
     };
@@ -75,16 +88,21 @@ const ThreeBackground = () => {
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
 
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("resize", handleResize);
       containerRef.current?.removeChild(renderer.domElement);
     };
   }, []);
 
-  return <div ref={containerRef} className="fixed top-0 left-0 w-full h-full -z-10" />;
+  return (
+    <div
+      ref={containerRef}
+      className="fixed top-0 left-0 w-full h-full -z-10"
+    />
+  );
 };
 
 export default ThreeBackground;

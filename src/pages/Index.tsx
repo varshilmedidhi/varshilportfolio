@@ -18,11 +18,13 @@ import { motion, useScroll } from "framer-motion";
 import Tilt from "react-parallax-tilt";
 import confetti from "canvas-confetti";
 import ResumeButton from "@/components/ResumeButton";
+import useResumeData from "../hooks/useResumeData";
 
 const Index = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const [opacity, setOpacity] = useState(1);
   const [isDownloading, setIsDownloading] = useState(false);
+  const { data, loading, error } = useResumeData();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,57 +60,6 @@ const Index = () => {
       setIsDownloading(false);
     }
   };
-
-  const workExperiences = [
-    {
-      company: "MSU-Information Technology",
-      role: "I.T Engineer",
-      period: "September 2024 – Present",
-      description:
-        "Orchestrated the upgrade and deployment of over 250 hardware devices and software systems, slashing system downtime by 60% and enhancing operational efficiency across campus departments.",
-      technologies: ["Hardware", "Software", "IT Support"],
-      achievements: [
-        "Automated preventative maintenance workflows and IT support processes, increasing team productivity by 70% and reducing issue resolution times by 50%.",
-        "Overhauled the center's digital presence, driving a 75% boost in online engagement through strategic website enhancements and streamlined social media content delivery.",
-      ],
-    },
-    {
-      company: "Apex Aesthetics Empire",
-      role: "Web Developer Intern",
-      period: "December 2024 – January 2025",
-      description:
-        "Architected a luxury aesthetic services platform with React that processed $50K+ in bookings through Stripe integration while maintaining 99.9% uptime and sub-2 second load times.",
-      technologies: ["React", "TypeScript", "Tailwind CSS"],
-      achievements: [
-        "Revolutionized client scheduling by implementing a dual-booking system handling both service appointments and professional tutorials, resulting in 200% increase in booking efficiency.",
-        "Engineered a premium UI/UX with custom animations and metallic gradients that increased user engagement by 150% and reduced bounce rates to under 20%.",
-      ],
-    },
-    {
-      company: "Michigan State Unviersity",
-      role: "Undergraduate Learning Assistant",
-      period: "May 2024 - August 2024 ",
-      description:
-        "Provided one-on-one tutoring and debugging assistance to 30+ students weekly, clarifying Python fundamentals like data structures and object-oriented principles. Increased average student exam performance by 15% and boosted overall retention rates.",
-      technologies: ["Python", "MS office", "Matplotlib", "Numpy", "Pandas"],
-      achievements: [
-        "Assisted the lead instructor in creating lab exercises, assignments, and real-world coding demonstrations that bridged theory and practice. Streamlined grading operations by 25%, ensuring timely, detailed feedback for all coursework.",
-        "Coordinated with faculty on course materials, exam reviews, and classroom discussions, promoting active learning and collaborative problem-solving. Helped maintain a positive learning environment through consistent mentoring and clear, concise communication.",
-      ],
-    },
-    {
-      company: "Michigan State University",
-      role: "Special Operations Supervisor II",
-      period: "Sep 2023 - Apr 2024",
-      description:
-        "Supervised Neighborhood Administrative Coordinators and managed residence hall security, event setups, and check-out processes.",
-      technologies: ["Excel", "Word", "Google Docs", "MS office", "Sheets"], // No specific technologies mentioned
-      achievements: [
-        "Conducted thorough security checks on exterior doors and event spaces to ensure preparedness.",
-        "Trained and mentored new hires, assessed staff performances, and coordinated mid-semester room changes.",
-      ],
-    },
-  ];
 
   const socialLinks = [
     {
@@ -165,7 +116,7 @@ const Index = () => {
               transition={{ delay: 0.6 }}
             >
               <p className="text-lg md:text-xl text-foreground/80 leading-relaxed mb-4">
-                Hi, I'm{" "}
+                I'm{" "}
                 <span className="text-primary font-semibold">
                   Varshil Medidhi
                 </span>
@@ -315,86 +266,96 @@ const Index = () => {
       <section className="min-h-screen py-20 px-6 bg-secondary/30">
         <div className="container mx-auto">
           <h2 className="section-title">Work Experience</h2>
-          <div className="relative">
-            {/* Progress Line */}
-            <div className="absolute left-0 md:left-1/2 h-full w-1 bg-primary/20 transform -translate-x-1/2" />
-            <div className="space-y-12">
-              {workExperiences.map((experience, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 50 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="relative"
-                  viewport={{ once: false, amount: 0.2 }}
-                >
-                  {/* Progress Dot */}
-                  <motion.div
-                    className="absolute left-0 md:left-1/2 w-4 h-4 bg-primary rounded-full transform -translate-x-1/2"
-                    initial={{ scale: 0 }}
-                    whileInView={{ scale: 1 }}
-                    transition={{ delay: 0.2 }}
-                  >
-                    <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping" />
-                  </motion.div>
-
-                  {/* Experience Card */}
-                  <div
-                    className={`relative ml-8 md:ml-0 ${
-                      index % 2 === 0
-                        ? "md:mr-[50%] md:pr-12"
-                        : "md:ml-[50%] md:pl-12"
-                    }`}
-                  >
-                    <motion.div
-                      className="bg-card p-8 rounded-lg card-hover backdrop-blur-sm shadow-lg"
-                      whileHover={{
-                        scale: 1.05,
-                        boxShadow: "0 10px 20px rgba(0,0,0,0.2)",
-                      }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                        <div>
-                          <h3 className="text-2xl font-bold text-primary">
-                            {experience.company}
-                          </h3>
-                          <p className="text-xl text-foreground/90">
-                            {experience.role}
-                          </p>
-                        </div>
-                        <span className="text-muted-foreground">
-                          {experience.period}
-                        </span>
-                      </div>
-                      <p className="text-foreground/80 mb-4">
-                        {experience.description}
-                      </p>
-                      <ul className="list-disc list-inside mb-4 text-foreground/80">
-                        {experience.achievements.map(
-                          (achievement, achievementIndex) => (
-                            <li key={achievementIndex} className="mb-2">
-                              {achievement}
-                            </li>
-                          )
-                        )}
-                      </ul>
-                      <div className="flex flex-wrap gap-2">
-                        {experience.technologies.map((tech, techIndex) => (
-                          <span
-                            key={techIndex}
-                            className="px-3 py-1 bg-primary/10 rounded-full text-primary text-sm"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
-                    </motion.div>
-                  </div>
-                </motion.div>
-              ))}
+          {loading ? (
+            <div className="flex items-center justify-center h-64">
+              <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
             </div>
-          </div>
+          ) : error ? (
+            <div className="text-center text-red-500 py-12">
+              Failed to load work experience data
+            </div>
+          ) : (
+            <div className="relative">
+              {/* Progress Line */}
+              <div className="absolute left-0 md:left-1/2 h-full w-1 bg-primary/20 transform -translate-x-1/2" />
+              <div className="space-y-12">
+                {data?.workExperiences?.map((experience, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    className="relative"
+                    viewport={{ once: false, amount: 0.2 }}
+                  >
+                    {/* Progress Dot */}
+                    <motion.div
+                      className="absolute left-0 md:left-1/2 w-4 h-4 bg-primary rounded-full transform -translate-x-1/2"
+                      initial={{ scale: 0 }}
+                      whileInView={{ scale: 1 }}
+                      transition={{ delay: 0.2 }}
+                    >
+                      <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping" />
+                    </motion.div>
+
+                    {/* Experience Card */}
+                    <div
+                      className={`relative ml-8 md:ml-0 ${
+                        index % 2 === 0
+                          ? "md:mr-[50%] md:pr-12"
+                          : "md:ml-[50%] md:pl-12"
+                      }`}
+                    >
+                      <motion.div
+                        className="bg-card p-8 rounded-lg card-hover backdrop-blur-sm shadow-lg"
+                        whileHover={{
+                          scale: 1.05,
+                          boxShadow: "0 10px 20px rgba(0,0,0,0.2)",
+                        }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                          <div>
+                            <h3 className="text-2xl font-bold text-primary">
+                              {experience.company}
+                            </h3>
+                            <p className="text-xl text-foreground/90">
+                              {experience.role}
+                            </p>
+                          </div>
+                          <span className="text-muted-foreground">
+                            {experience.period}
+                          </span>
+                        </div>
+                        <p className="text-foreground/80 mb-4">
+                          {experience.description}
+                        </p>
+                        <ul className="list-disc list-inside mb-4 text-foreground/80">
+                          {experience.achievements.map(
+                            (achievement, achievementIndex) => (
+                              <li key={achievementIndex} className="mb-2">
+                                {achievement}
+                              </li>
+                            )
+                          )}
+                        </ul>
+                        <div className="flex flex-wrap gap-2">
+                          {experience.technologies.map((tech, techIndex) => (
+                            <span
+                              key={techIndex}
+                              className="px-3 py-1 bg-primary/10 rounded-full text-primary text-sm"
+                            >
+                              {tech}
+                            </span>
+                          ))}
+                        </div>
+                      </motion.div>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
