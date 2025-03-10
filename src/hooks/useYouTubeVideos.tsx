@@ -56,7 +56,7 @@ const useYouTubeVideos = (channelId: string | null) => {
         if (data.items && data.items.length > 0) {
           setVideos(data.items);
         } else {
-          setError("Build videos to showcase.");
+          setError("Making videos to showcase.");
         }
       } catch (error) {
         setError("Failed to fetch videos.");
