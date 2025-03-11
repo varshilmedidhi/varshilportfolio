@@ -281,75 +281,56 @@ const Index = () => {
               <div className="space-y-12">
                 {data?.workExperiences
                   ?.sort((a, b) => {
-                    // Helper function to check if a period contains "Present"
-                    const isPresent = (period: string | undefined): boolean => {
-                      if (!period) return false;
-                      return period.toLowerCase().includes("present");
-                    };
+                    // Check if either has "Present" in the period
+                    const aHasPresent =
+                      a.period?.toLowerCase().includes("present") || false;
+                    const bHasPresent =
+                      b.period?.toLowerCase().includes("present") || false;
 
-                    // Helper function to extract start date value (YYYYMM format)
-                    const getStartDateValue = (
-                      period: string | undefined
-                    ): number => {
-                      try {
-                        if (!period) return 0;
+                    // If one has "Present", it comes first
+                    if (aHasPresent && !bHasPresent) return -1;
+                    if (!aHasPresent && bHasPresent) return 1;
 
-                        // Extract the start date part (before the " - ")
-                        const startPart = period.split(" - ")[0]?.trim();
-                        if (!startPart) return 0;
+                    // Otherwise, extract and compare start dates
+                    try {
+                      // Get start dates (first part before the dash)
+                      const aStart = a.period?.split(" - ")[0]?.trim() || "";
+                      const bStart = b.period?.split(" - ")[0]?.trim() || "";
 
-                        // Split into month and year
-                        const parts = startPart.split(" ");
-                        if (parts.length !== 2) return 0;
+                      // Extract month and year
+                      const [aMonth, aYear] = aStart.split(" ");
+                      const [bMonth, bYear] = bStart.split(" ");
 
-                        const [month, year] = parts;
+                      // Month mapping
+                      const months = {
+                        January: 1,
+                        February: 2,
+                        March: 3,
+                        April: 4,
+                        May: 5,
+                        June: 6,
+                        July: 7,
+                        August: 8,
+                        September: 9,
+                        October: 10,
+                        November: 11,
+                        December: 12,
+                      };
 
-                        // Convert month name to number
-                        const monthMap: Record<string, number> = {
-                          January: 1,
-                          February: 2,
-                          March: 3,
-                          April: 4,
-                          May: 5,
-                          June: 6,
-                          July: 7,
-                          August: 8,
-                          September: 9,
-                          October: 10,
-                          November: 11,
-                          December: 12,
-                        };
+                      // Convert to numeric values (YYYYMM format)
+                      const aValue =
+                        (parseInt(aYear) || 0) * 100 +
+                        (months[aMonth as keyof typeof months] || 0);
+                      const bValue =
+                        (parseInt(bYear) || 0) * 100 +
+                        (months[bMonth as keyof typeof months] || 0);
 
-                        const monthNum = monthMap[month] || 0;
-                        const yearNum = parseInt(year) || 0;
-
-                        // Return as YYYYMM format
-                        return yearNum * 100 + monthNum;
-                      } catch {
-                        return 0;
-                      }
-                    };
-
-                    // Check if either experience has "Present" as end date
-                    const aHasPresent = isPresent(a.period);
-                    const bHasPresent = isPresent(b.period);
-
-                    // If both have "Present", sort by start date (most recent first)
-                    if (aHasPresent && bHasPresent) {
-                      return (
-                        getStartDateValue(b.period) -
-                        getStartDateValue(a.period)
-                      );
+                      // Sort by start date (most recent first)
+                      return bValue - aValue;
+                    } catch (error) {
+                      console.error("Error sorting experiences:", error);
+                      return 0;
                     }
-
-                    // If only one has "Present", it comes first
-                    if (aHasPresent) return -1;
-                    if (bHasPresent) return 1;
-
-                    // Otherwise sort by end date (most recent first)
-                    return (
-                      getStartDateValue(b.period) - getStartDateValue(a.period)
-                    );
                   })
                   .map((experience, index) => (
                     <motion.div
