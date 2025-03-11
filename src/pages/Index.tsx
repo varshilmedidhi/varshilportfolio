@@ -279,80 +279,152 @@ const Index = () => {
               {/* Progress Line */}
               <div className="absolute left-0 md:left-1/2 h-full w-1 bg-primary/20 transform -translate-x-1/2" />
               <div className="space-y-12">
-                {data?.workExperiences?.map((experience, index) => (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    className="relative"
-                    viewport={{ once: false, amount: 0.2 }}
-                  >
-                    {/* Progress Dot */}
-                    <motion.div
-                      className="absolute left-0 md:left-1/2 w-4 h-4 bg-primary rounded-full transform -translate-x-1/2"
-                      initial={{ scale: 0 }}
-                      whileInView={{ scale: 1 }}
-                      transition={{ delay: 0.2 }}
-                    >
-                      <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping" />
-                    </motion.div>
+                {data?.workExperiences
+                  ?.sort((a, b) => {
+                    // Helper function to check if a period contains "Present"
+                    const isPresent = (period: string | undefined): boolean => {
+                      if (!period) return false;
+                      return period.toLowerCase().includes("present");
+                    };
 
-                    {/* Experience Card */}
-                    <div
-                      className={`relative ml-8 md:ml-0 ${
-                        index % 2 === 0
-                          ? "md:mr-[50%] md:pr-12"
-                          : "md:ml-[50%] md:pl-12"
-                      }`}
+                    // Helper function to extract start date value (YYYYMM format)
+                    const getStartDateValue = (
+                      period: string | undefined
+                    ): number => {
+                      try {
+                        if (!period) return 0;
+
+                        // Extract the start date part (before the " - ")
+                        const startPart = period.split(" - ")[0]?.trim();
+                        if (!startPart) return 0;
+
+                        // Split into month and year
+                        const parts = startPart.split(" ");
+                        if (parts.length !== 2) return 0;
+
+                        const [month, year] = parts;
+
+                        // Convert month name to number
+                        const monthMap: Record<string, number> = {
+                          January: 1,
+                          February: 2,
+                          March: 3,
+                          April: 4,
+                          May: 5,
+                          June: 6,
+                          July: 7,
+                          August: 8,
+                          September: 9,
+                          October: 10,
+                          November: 11,
+                          December: 12,
+                        };
+
+                        const monthNum = monthMap[month] || 0;
+                        const yearNum = parseInt(year) || 0;
+
+                        // Return as YYYYMM format
+                        return yearNum * 100 + monthNum;
+                      } catch {
+                        return 0;
+                      }
+                    };
+
+                    // Check if either experience has "Present" as end date
+                    const aHasPresent = isPresent(a.period);
+                    const bHasPresent = isPresent(b.period);
+
+                    // If both have "Present", sort by start date (most recent first)
+                    if (aHasPresent && bHasPresent) {
+                      return (
+                        getStartDateValue(b.period) -
+                        getStartDateValue(a.period)
+                      );
+                    }
+
+                    // If only one has "Present", it comes first
+                    if (aHasPresent) return -1;
+                    if (bHasPresent) return 1;
+
+                    // Otherwise sort by end date (most recent first)
+                    return (
+                      getStartDateValue(b.period) - getStartDateValue(a.period)
+                    );
+                  })
+                  .map((experience, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 50 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      className="relative"
+                      viewport={{ once: false, amount: 0.2 }}
                     >
+                      {/* Progress Dot */}
                       <motion.div
-                        className="bg-card p-8 rounded-lg card-hover backdrop-blur-sm shadow-lg"
-                        whileHover={{
-                          scale: 1.05,
-                          boxShadow: "0 10px 20px rgba(0,0,0,0.2)",
-                        }}
-                        transition={{ duration: 0.3 }}
+                        className="absolute left-0 md:left-1/2 w-4 h-4 bg-primary rounded-full transform -translate-x-1/2"
+                        initial={{ scale: 0 }}
+                        whileInView={{ scale: 1 }}
+                        transition={{ delay: 0.2 }}
                       >
-                        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
-                          <div>
-                            <h3 className="text-2xl font-bold text-primary">
-                              {experience.company}
-                            </h3>
-                            <p className="text-xl text-foreground/90">
-                              {experience.role}
-                            </p>
-                          </div>
-                          <span className="text-muted-foreground">
-                            {experience.period}
-                          </span>
-                        </div>
-                        <p className="text-foreground/80 mb-4">
-                          {experience.description}
-                        </p>
-                        <ul className="list-disc list-inside mb-4 text-foreground/80">
-                          {experience.achievements.map(
-                            (achievement, achievementIndex) => (
-                              <li key={achievementIndex} className="mb-2">
-                                {achievement}
-                              </li>
-                            )
-                          )}
-                        </ul>
-                        <div className="flex flex-wrap gap-2">
-                          {experience.technologies.map((tech, techIndex) => (
-                            <span
-                              key={techIndex}
-                              className="px-3 py-1 bg-primary/10 rounded-full text-primary text-sm"
-                            >
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
+                        <div className="absolute inset-0 rounded-full bg-primary/20 animate-ping" />
                       </motion.div>
-                    </div>
-                  </motion.div>
-                ))}
+
+                      {/* Experience Card */}
+                      <div
+                        className={`relative ml-8 md:ml-0 ${
+                          index % 2 === 0
+                            ? "md:mr-[50%] md:pr-12"
+                            : "md:ml-[50%] md:pl-12"
+                        }`}
+                      >
+                        <motion.div
+                          className="bg-card p-8 rounded-lg card-hover backdrop-blur-sm shadow-lg"
+                          whileHover={{
+                            scale: 1.05,
+                            boxShadow: "0 10px 20px rgba(0,0,0,0.2)",
+                          }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4">
+                            <div>
+                              <h3 className="text-2xl font-bold text-primary">
+                                {experience.company}
+                              </h3>
+                              <p className="text-xl text-foreground/90">
+                                {experience.role}
+                              </p>
+                            </div>
+                            <span className="text-muted-foreground">
+                              {experience.period}
+                            </span>
+                          </div>
+                          <p className="text-foreground/80 mb-4">
+                            {experience.description}
+                          </p>
+                          <ul className="list-disc list-inside mb-4 text-foreground/80">
+                            {experience.achievements.map(
+                              (achievement, achievementIndex) => (
+                                <li key={achievementIndex} className="mb-2">
+                                  {achievement}
+                                </li>
+                              )
+                            )}
+                          </ul>
+                          <div className="flex flex-wrap gap-2">
+                            {experience.technologies.map((tech, techIndex) => (
+                              <span
+                                key={techIndex}
+                                className="px-3 py-1 bg-primary/10 rounded-full text-primary text-sm"
+                              >
+                                {tech}
+                              </span>
+                            ))}
+                          </div>
+                        </motion.div>
+                      </div>
+                    </motion.div>
+                  ))}
               </div>
             </div>
           )}

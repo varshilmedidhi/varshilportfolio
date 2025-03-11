@@ -11,6 +11,7 @@ interface Project {
 }
 
 interface WorkExperience {
+  _id: string;
   company: string;
   role: string;
   period: string;
