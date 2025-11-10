@@ -24,7 +24,7 @@ const Index = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   const [opacity, setOpacity] = useState(1);
   const [isDownloading, setIsDownloading] = useState(false);
-  const { data, loading, error } = useResumeData();
+  const { data } = useResumeData();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -120,10 +120,12 @@ const Index = () => {
                 <span className="text-primary font-semibold">
                   Varshil Medidhi
                 </span>
-                , a CS major @ Michigan State University (MSU).
+                , a Computer Science major @ Michigan State University (MSU)
+                with a concentration in Software Development.
               </p>
               <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
-                {" "}
+                Expected Graduation: May 2027 | 2x Dean's Honors List | Project
+                Lead @ Imagine Software Club
               </p>
             </motion.div>
 
@@ -266,21 +268,13 @@ const Index = () => {
       <section className="min-h-screen py-20 px-6 bg-secondary/30">
         <div className="container mx-auto">
           <h2 className="section-title">Work Experience</h2>
-          {loading ? (
-            <div className="flex items-center justify-center h-64">
-              <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-            </div>
-          ) : error ? (
-            <div className="text-center text-red-500 py-12">
-              Failed to load work experience data
-            </div>
-          ) : (
+          {data?.workExperiences && data.workExperiences.length > 0 ? (
             <div className="relative">
               {/* Progress Line */}
               <div className="absolute left-0 md:left-1/2 h-full w-1 bg-primary/20 transform -translate-x-1/2" />
               <div className="space-y-12">
-                {data?.workExperiences
-                  ?.sort((a, b) => {
+                {data.workExperiences
+                  .sort((a, b) => {
                     // Check if either has "Present" in the period
                     const aHasPresent =
                       a.period?.toLowerCase().includes("present") || false;
@@ -408,6 +402,10 @@ const Index = () => {
                   ))}
               </div>
             </div>
+          ) : (
+            <div className="text-center text-muted-foreground py-12">
+              Work experience will be displayed here
+            </div>
           )}
         </div>
       </section>
@@ -466,16 +464,28 @@ const Index = () => {
             <div className="md:w-1/2 text-left">
               <p className="mt-4 text-lg leading-relaxed">
                 Hi there! I'm{" "}
-                <span className="font-semibold">Varshil Medidhi</span>, a CS
-                major at Michigan State University. I have a Keen Passion for
-                technology and I've been on a journey to explore the endless
-                possibilities of the digital world.
+                <span className="font-semibold">Varshil Medidhi</span>, a
+                Computer Science major at Michigan State University with a
+                concentration in Software Development, expected to graduate in
+                May 2027. I'm passionate about building innovative software
+                solutions and have been recognized on the Dean's Honors List
+                twice.
               </p>
               <p className="mt-4 text-lg leading-relaxed">
-                I love transforming ideas into reality through innovative
-                solutions. Whether it's crafting responsive web applications or
-                diving into the world of AI, I am always eager to learn and
-                grow.
+                Currently, I serve as a Project Lead at Imagine Software Club,
+                where I lead a team building real-time applications using Java
+                and Spring Boot. I'm also an Undergraduate Learning Assistant
+                for CSE 231 (Introduction to Python), mentoring 100+ students. I
+                love transforming ideas into reality through full-stack
+                development, whether it's building MERN applications,
+                implementing machine learning models, or creating real-time
+                communication platforms.
+              </p>
+              <p className="mt-4 text-lg leading-relaxed">
+                My experience includes internships at Telus Communications and
+                MSK Infinitum Solutions, where I've worked on automation
+                systems, full-stack platforms, and payment integrations. I'm
+                always eager to learn and contribute to meaningful projects.
               </p>
             </div>
           </div>

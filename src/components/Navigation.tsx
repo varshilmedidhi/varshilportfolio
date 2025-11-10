@@ -64,9 +64,6 @@ const Navigation = () => {
           >
             Contact
           </a>
-          <Link to="/youtube" className="nav-link">
-            Video Showcase
-          </Link>
         </div>
       </div>
     </nav>
